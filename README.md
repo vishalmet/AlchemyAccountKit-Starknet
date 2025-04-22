@@ -43,7 +43,7 @@ Choose one of the following wallets:
 
 3. Install required packages:
    ```bash
-   npm install starknet @vitejs/plugin-react --legacy-peer-deps
+   npm install @starknet-react/core starknet --legacy-peer-deps
    ```
 
 4. Create `.env` file:
@@ -59,26 +59,32 @@ Choose one of the following wallets:
 
 - `src/starknetConnect.ts`: Contains the wallet connection logic and Alchemy provider configuration
 - `src/App.tsx`: Main React component with the connect wallet button and UI
+- `src/main.tsx`: Application entry point with Starknet configuration
 
 ## Implementation Details
 
 ### Wallet Connection
 
-The project uses the browser-injected `window.starknet` object to connect to Starknet wallets. The connection flow:
+The project uses `@starknet-react/core` for wallet connection. The connection flow:
 
-1. Checks if a Starknet wallet (Braavos/ArgentX) is installed
-2. Calls `window.starknet.enable()` to request wallet connection
-3. Retrieves the connected account's address
+1. Uses `StarknetConfig` provider to wrap the application
+2. Configures connectors for Braavos and ArgentX wallets
+3. Uses hooks from `@starknet-react/core` for connection management:
+   - `useAccount` for account information
+   - `useConnect` for wallet connection
+   - `useDisconnect` for wallet disconnection
 
 ### Alchemy Integration
 
 The project uses Alchemy as the RPC provider for Starknet:
 
 ```typescript
-const alchemyProvider = new RpcProvider({
-  nodeUrl: `https://starknet-mainnet.g.alchemy.com/starknet/version/rpc/v0_6/${import.meta.env.VITE_ALCHEMY_API_KEY}`,
-  chainId: constants.StarknetChainId.SN_MAIN,
-});
+const providerFactory = (chain: any) => {
+  return new RpcProvider({
+    nodeUrl: `https://starknet-mainnet.g.alchemy.com/starknet/version/rpc/v0_6/${import.meta.env.VITE_ALCHEMY_API_KEY}`,
+    chainId: constants.StarknetChainId.SN_MAIN,
+  });
+};
 ```
 
 ## Usage
@@ -95,9 +101,21 @@ const alchemyProvider = new RpcProvider({
 
 ## Dependencies
 
+- `@starknet-react/core`: React hooks for Starknet integration
 - `starknet`: Core Starknet library
 - `react`: React framework
 - `@vitejs/plugin-react`: Vite plugin for React
+
+## Known Issues
+
+### Deprecation Warning
+
+You may see a warning in the console:
+```
+@deprecated Use static method WalletAccount.connect or WalletAccount.connectSilent instead. Constructor {@link WalletAccount.(format:2)}.
+```
+
+This warning comes from the internal implementation of `@starknet-react/core` and does not affect functionality. It will be resolved in future updates of the library.
 
 ## Error Handling
 
@@ -108,20 +126,7 @@ The implementation includes error handling for:
 
 ## TypeScript Support
 
-The project includes proper TypeScript declarations for the Starknet wallet interface:
-
-```typescript
-declare global {
-  interface Window {
-    starknet?: {
-      enable: () => Promise<void>;
-      account: {
-        address: string;
-      };
-    };
-  }
-}
-```
+The project includes proper TypeScript declarations for the Starknet wallet interface and chain configuration.
 
 ## Troubleshooting
 
@@ -140,6 +145,12 @@ declare global {
 3. **TypeScript Errors**
    - Run `npm install` to ensure all dependencies are installed
    - Check TypeScript version compatibility
+
+4. **Dependency Conflicts**
+   - If you encounter dependency conflicts, use the `--legacy-peer-deps` flag:
+     ```bash
+     npm install --legacy-peer-deps
+     ```
 
 ## Contributing
 
