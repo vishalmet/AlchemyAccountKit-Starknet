@@ -9,15 +9,48 @@ This project demonstrates how to connect to Starknet wallets (Braavos/ArgentX) u
 - A Starknet wallet (Braavos or ArgentX) installed in your browser
 - An Alchemy API key
 
-## Setup
+## Installation
 
-1. Clone the repository
-2. Install dependencies:
+### 1. Install Node.js and npm
+- Download and install Node.js from [nodejs.org](https://nodejs.org/)
+- Verify installation:
+  ```bash
+  node --version
+  npm --version
+  ```
+
+### 2. Install Starknet Wallet
+Choose one of the following wallets:
+- [Braavos Wallet](https://braavos.app/) - Chrome extension
+- [ArgentX Wallet](https://www.argent.xyz/argent-x/) - Chrome extension
+
+### 3. Get Alchemy API Key
+1. Sign up at [Alchemy](https://www.alchemy.com/)
+2. Create a new Starknet app
+3. Copy your API key from the dashboard
+
+### 4. Project Setup
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd alchemy-accountkit-app
+   ```
+
+2. Install project dependencies:
    ```bash
    npm install
    ```
 
-3. Create a `.env` file in the root directory with your Alchemy API key:
+3. Install required packages:
+   ```bash
+   npm install starknet @vitejs/plugin-react --legacy-peer-deps
+   ```
+
+4. Create `.env` file:
+   ```bash
+   touch .env
+   ```
+   Add your Alchemy API key:
    ```
    VITE_ALCHEMY_API_KEY=your_alchemy_api_key_here
    ```
@@ -89,6 +122,24 @@ declare global {
   }
 }
 ```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Wallet Not Detected**
+   - Ensure you have either Braavos or ArgentX installed
+   - Check if the wallet extension is enabled
+   - Try refreshing the page
+
+2. **Connection Failed**
+   - Check your Alchemy API key in `.env`
+   - Verify network connectivity
+   - Ensure you're on the correct network (Mainnet)
+
+3. **TypeScript Errors**
+   - Run `npm install` to ensure all dependencies are installed
+   - Check TypeScript version compatibility
 
 ## Contributing
 
